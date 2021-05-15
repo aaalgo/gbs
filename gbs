@@ -1,0 +1,18 @@
+#/bin/bash
+
+RECIPIENT=XXX
+URL=YYY
+
+SINCE=`git show --summary | head -n 1 | cut -f 2 -d ' '`
+
+wget "$URL?since=$SINCE&recipient=$RECIPIENT" -O bundle
+
+if [ ! -f bundle.enc ]
+then
+exit
+fi
+
+gpg --output bundle --decrypt bundle.enc
+
+git pull bundle master:localRef
+
